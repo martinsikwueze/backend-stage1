@@ -55,3 +55,103 @@ Once the dependencies are installed, you can start the Flask server with a singl
 ```bash
 python app.py
 ```
+
+## API Endpoints and Testing
+
+You can use command-line tools like `curl` to test the functionality
+
+1. **Create/Analyze String**
+
+    Analyzes a new string and stores its properties.
+
+    * **URL**: /stings
+    * **Method**: POST
+    * **Request Body**:
+
+    ```json
+    {
+        "value": "your string here"
+    }
+    ```
+
+    * **Success Response (210 Created)**: Returns the full analysis object.
+    * **Error Responses**: 400 Bad Request, 409 Conflict, 422 Unprocessable Entity.
+
+    Example curl Request:
+
+    ```bash
+    curl -X POST -H "Content-Type: application/json" -d '{"value": "A new test string"}' http://127.0.0.1:5000/strings
+    ```
+
+2. **Get Specific String**
+
+    Retrieves the analysis for a specific string by its value.
+
+    * **URL**: /strings/<string_value>
+    * **Method**: GET
+    * **Success Response (200 OK)**: Returns the stored analysis object.
+    * **Error Responses**: 404 Not Found.
+
+    Example curl Request:
+
+    ```bash
+    curl http://127.0.0.1:5000/strings/hello%20world
+    ```
+
+3. **Get All Strings with Filtering**
+
+    Retrieves a list of all stored strings, with optional query parameters for filtering.
+
+    * **URL**: /strings
+    * **Method**: GET
+    * **Query Parameters**:
+        * is_palindrome (boolean): true or false
+        * min_length (integer)
+        * max_length (integer)
+        * word_count (integer)
+        * contains_character (string)
+    * **Success Response (200 OK)**: Returns a list of matching strings and applied filters.
+    * **Error Responses**: 400 Bad Request for invalid parameter values.
+
+    Example curl Request:
+
+    ```bash
+    Find all palindromes with a length of at least 5
+    curl "http://127.0.0.1:5000/strings?is_palindrome=true&min_length=5"
+    ```
+
+4. **Natural Language Filtering**
+
+    Retrieves a list of strings by interpreting a natural language query.
+
+    * **URL**: /strings/filter-by-natural-language
+    * **Method**: GET
+    * **Query Parameters**:
+        * query (string): The natural language query.
+    * **Success Response (200 OK)**: Returns the matching strings and the interpreted filters.
+    * **Error Responses**: 400 Bad Request, 422 Unprocessable Entity.
+
+    Example curl Request:
+
+    ```bash
+    Query: "all single word palindromic strings"
+    curl "http://127.0.0.1:5000/strings/filter-by-natural-language?query=all%20single%20word%20palindromic%20strings"
+
+    Query: "strings containing the letter z"
+    curl "http://127.0.0.1:5000/strings/filter-by-natural-language?query=strings%20containing%20the%20letter%20z"
+    ```
+
+5. **Delete String**
+
+    Deletes a stored string analysis by its value.
+
+    * **URL**: /strings/<string_value>
+    * **Method**: DELETE
+    * **Success Response (204 No Content)**: Returns an empty response body.
+    * **Error Responses**: 404 Not Found.
+
+    Example curl Request:
+
+    ```bash
+    curl -X DELETE http://127.0.0.1:5001/strings/python
+    ```

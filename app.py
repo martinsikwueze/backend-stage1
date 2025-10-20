@@ -9,7 +9,6 @@ app = Flask(__name__)
 string_storage = {}
 
 def analyze_string(value: str):
-    """Computes all required properties for a given string."""
     sha256 = hashlib.sha256(value.encode()).hexdigest()
     
     # Normalize for palindrome check (case-insensitive, ignores non-alphanumeric chars)
